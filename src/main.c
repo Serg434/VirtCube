@@ -110,7 +110,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  srand(HAL_GetTick());
+    srand(HAL_GetTick());
 
     if (GPIO_PIN_RESET == HAL_GPIO_ReadPin(GPIOC, BUTTON))
     {
