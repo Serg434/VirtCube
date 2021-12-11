@@ -51,10 +51,12 @@
 
 /* USER CODE BEGIN PV */
 int countDel = 500;
-int randNum = 0;
+int randNum = 7;
 // int randArr[7] = {0, 1, 2, 3, 4, 5, 6};
 int ledArr[7] = {A, B, C, D, E, F};
 static GPIO_TypeDef *GpioArr[7] = {GPIOA, GPIOA, GPIOA, GPIOB, GPIOB, GPIOB, GPIOB};
+uint32_t lastPress;
+int sleepTime = 10000;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -63,6 +65,7 @@ static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
 
 void randomNum();
+void ledOff();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -114,19 +117,26 @@ int main(void)
     if (GPIO_PIN_RESET == HAL_GPIO_ReadPin(GPIOC, BUTTON))
     {
       randomNum();
+      lastPress = HAL_GetTick();
     }
 
+    if (HAL_GetTick() - lastPress >= sleepTime)
+    {
+      randNum = 0;
+    }
+    
     switch (randNum)
     {
+    case 0:
+      ledOff();
+      break;
     case 1:
-      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5, GPIO_PIN_RESET);
+      ledOff();
       HAL_GPIO_WritePin(GPIOA, B, GPIO_PIN_SET);
       HAL_GPIO_WritePin(GPIOA, C, GPIO_PIN_SET);
       break;
     case 2:
-      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5, GPIO_PIN_RESET);
+      ledOff();
       HAL_GPIO_WritePin(GPIOA, A, GPIO_PIN_SET);
       HAL_GPIO_WritePin(GPIOA, B, GPIO_PIN_SET);
       HAL_GPIO_WritePin(GPIOB, G, GPIO_PIN_SET);
@@ -134,8 +144,7 @@ int main(void)
       HAL_GPIO_WritePin(GPIOB, E, GPIO_PIN_SET);
       break;
     case 3:
-      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5, GPIO_PIN_RESET);
+      ledOff();
       HAL_GPIO_WritePin(GPIOA, A, GPIO_PIN_SET);
       HAL_GPIO_WritePin(GPIOA, B, GPIO_PIN_SET);
       HAL_GPIO_WritePin(GPIOB, G, GPIO_PIN_SET);
@@ -143,16 +152,14 @@ int main(void)
       HAL_GPIO_WritePin(GPIOA, C, GPIO_PIN_SET);
       break;
     case 4:
-      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5, GPIO_PIN_RESET);
+      ledOff();
       HAL_GPIO_WritePin(GPIOA, B, GPIO_PIN_SET);
       HAL_GPIO_WritePin(GPIOB, G, GPIO_PIN_SET);
       HAL_GPIO_WritePin(GPIOA, C, GPIO_PIN_SET);
       HAL_GPIO_WritePin(GPIOB, F, GPIO_PIN_SET);
       break;
     case 5:
-      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5, GPIO_PIN_RESET);
+      ledOff();
       HAL_GPIO_WritePin(GPIOA, A, GPIO_PIN_SET);
       HAL_GPIO_WritePin(GPIOB, G, GPIO_PIN_SET);
       HAL_GPIO_WritePin(GPIOB, D, GPIO_PIN_SET);
@@ -160,8 +167,7 @@ int main(void)
       HAL_GPIO_WritePin(GPIOB, F, GPIO_PIN_SET);
       break;
     case 6:
-      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5, GPIO_PIN_RESET);
+      ledOff();
       HAL_GPIO_WritePin(GPIOA, A, GPIO_PIN_SET);
       HAL_GPIO_WritePin(GPIOB, G, GPIO_PIN_SET);
       HAL_GPIO_WritePin(GPIOB, D, GPIO_PIN_SET);
@@ -262,13 +268,11 @@ void randomNum()
 {
   if (randNum == 0)
   {
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5, GPIO_PIN_RESET);
+    ledOff();
   }
   else
   {
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5, GPIO_PIN_RESET);
+    ledOff();
 
     for (int x = 0; x < 1; x++)
     {
@@ -281,6 +285,12 @@ void randomNum()
     }
   }
   randNum = rand() % 6 + 1;
+}
+
+void ledOff()
+{
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5, GPIO_PIN_RESET);
 }
 /* USER CODE END 4 */
 
